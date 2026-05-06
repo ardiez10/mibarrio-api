@@ -25,4 +25,22 @@ public class ComercioController {
     public Comercio create(@RequestBody Comercio comercio) {
         return comercioService.create(comercio);
     }
+
+    @GetMapping("/{id}")
+    public Comercio getById(@PathVariable Long id) {
+        return comercioService.getById(id);
+    }
+
+    @PutMapping("/{id}")
+    public Comercio update(
+            @PathVariable Long id,
+            @RequestBody Comercio comercio) {
+
+        return comercioService.update(id, comercio);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        comercioService.delete(id);
+    }
 }

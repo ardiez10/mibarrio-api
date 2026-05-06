@@ -16,10 +16,37 @@ public class ComercioService {
     }
 
     public List<Comercio> getAll() {
-        return comercioRepository.findAll();
+        return comercioRepository.findByActivoTrue(); //solo sacamos los activos
     }
 
     public Comercio create(Comercio comercio) {
         return comercioRepository.save(comercio);
+    }
+
+    public Comercio getById(Long id) {
+        return comercioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Comercio no encontrado"));
+    }
+
+    public Comercio update(Long id, Comercio updatedComercio) {
+
+        Comercio comercio = comercioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Comercio no encontrado"));
+
+        comercio.setNombre(updatedComercio.getNombre());
+        comercio.setDireccion(updatedComercio.getDireccion());
+        comercio.setTelefono(updatedComercio.getTelefono());
+
+        return comercioRepository.save(comercio);
+    }
+
+    public void delete(Long id) { //borrado lógico
+
+        Comercio comercio = comercioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Comercio no encontrado"));
+
+        comercio.setActivo(false);
+
+        comercioRepository.save(comercio);
     }
 }
