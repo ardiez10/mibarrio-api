@@ -1,6 +1,8 @@
 package com.mibarrio.api.controller;
 
-import com.mibarrio.api.model.Comercio;
+import com.mibarrio.api.dto.comercio.ComercioResponse;
+import com.mibarrio.api.dto.comercio.CreateComercioRequest;
+import com.mibarrio.api.dto.comercio.UpdateComercioRequest;
 import com.mibarrio.api.service.ComercioService;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,26 +19,25 @@ public class ComercioController {
     }
 
     @GetMapping
-    public List<Comercio> getAll() {
+    public List<ComercioResponse> getAll() {
         return comercioService.getAll();
     }
 
-    @PostMapping
-    public Comercio create(@RequestBody Comercio comercio) {
-        return comercioService.create(comercio);
-    }
-
     @GetMapping("/{id}")
-    public Comercio getById(@PathVariable Long id) {
+    public ComercioResponse getById(@PathVariable Long id) {
         return comercioService.getById(id);
     }
 
-    @PutMapping("/{id}")
-    public Comercio update(
-            @PathVariable Long id,
-            @RequestBody Comercio comercio) {
+    @PostMapping
+    public ComercioResponse create(@RequestBody CreateComercioRequest request) {
+        return comercioService.create(request);
+    }
 
-        return comercioService.update(id, comercio);
+    @PutMapping("/{id}")
+    public ComercioResponse update(
+            @PathVariable Long id,
+            @RequestBody UpdateComercioRequest request) {
+        return comercioService.update(id, request);
     }
 
     @DeleteMapping("/{id}")
