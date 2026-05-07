@@ -4,6 +4,9 @@ import com.mibarrio.api.dto.comercio.ComercioResponse;
 import com.mibarrio.api.dto.comercio.CreateComercioRequest;
 import com.mibarrio.api.dto.comercio.UpdateComercioRequest;
 import com.mibarrio.api.service.ComercioService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,14 +32,14 @@ public class ComercioController {
     }
 
     @PostMapping
-    public ComercioResponse create(@RequestBody CreateComercioRequest request) {
+    public ComercioResponse create(@Valid @RequestBody CreateComercioRequest request) {
         return comercioService.create(request);
     }
 
     @PutMapping("/{id}")
     public ComercioResponse update(
             @PathVariable Long id,
-            @RequestBody UpdateComercioRequest request) {
+            @Valid @RequestBody UpdateComercioRequest request) {
         return comercioService.update(id, request);
     }
 

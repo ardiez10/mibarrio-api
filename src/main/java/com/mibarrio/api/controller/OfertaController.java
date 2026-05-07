@@ -4,6 +4,9 @@ import com.mibarrio.api.dto.oferta.CreateOfertaRequest;
 import com.mibarrio.api.dto.oferta.OfertaResponse;
 import com.mibarrio.api.dto.oferta.UpdateOfertaRequest;
 import com.mibarrio.api.service.OfertaService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,14 +39,16 @@ public class OfertaController {
     @PostMapping("/comercio/{comercioId}")
     public OfertaResponse create(
             @PathVariable Long comercioId,
-            @RequestBody CreateOfertaRequest request) {
+            @Valid @RequestBody CreateOfertaRequest request) {
+
         return ofertaService.create(comercioId, request);
     }
 
     @PutMapping("/{id}")
     public OfertaResponse update(
             @PathVariable Long id,
-            @RequestBody UpdateOfertaRequest request) {
+            @Valid @RequestBody UpdateOfertaRequest request) {
+
         return ofertaService.update(id, request);
     }
 
