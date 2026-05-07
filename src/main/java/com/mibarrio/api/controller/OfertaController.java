@@ -1,6 +1,8 @@
 package com.mibarrio.api.controller;
 
-import com.mibarrio.api.model.Oferta;
+import com.mibarrio.api.dto.oferta.CreateOfertaRequest;
+import com.mibarrio.api.dto.oferta.OfertaResponse;
+import com.mibarrio.api.dto.oferta.UpdateOfertaRequest;
 import com.mibarrio.api.service.OfertaService;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,28 +19,32 @@ public class OfertaController {
     }
 
     @GetMapping
-    public List<Oferta> getAll() {
+    public List<OfertaResponse> getAll() {
         return ofertaService.getAll();
     }
 
     @GetMapping("/{id}")
-    public Oferta getById(@PathVariable Long id) {
+    public OfertaResponse getById(@PathVariable Long id) {
         return ofertaService.getById(id);
     }
 
     @GetMapping("/comercio/{comercioId}")
-    public List<Oferta> getByComercioId(@PathVariable Long comercioId) {
+    public List<OfertaResponse> getByComercioId(@PathVariable Long comercioId) {
         return ofertaService.getByComercioId(comercioId);
     }
 
     @PostMapping("/comercio/{comercioId}")
-    public Oferta create(@PathVariable Long comercioId, @RequestBody Oferta oferta) {
-        return ofertaService.create(comercioId, oferta);
+    public OfertaResponse create(
+            @PathVariable Long comercioId,
+            @RequestBody CreateOfertaRequest request) {
+        return ofertaService.create(comercioId, request);
     }
 
     @PutMapping("/{id}")
-    public Oferta update(@PathVariable Long id, @RequestBody Oferta oferta) {
-        return ofertaService.update(id, oferta);
+    public OfertaResponse update(
+            @PathVariable Long id,
+            @RequestBody UpdateOfertaRequest request) {
+        return ofertaService.update(id, request);
     }
 
     @DeleteMapping("/{id}")

@@ -1,12 +1,16 @@
 package com.mibarrio.api.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.mibarrio.api.dto.oferta.CreateOfertaRequest;
+import com.mibarrio.api.dto.oferta.OfertaResponse;
+import com.mibarrio.api.dto.oferta.UpdateOfertaRequest;
 import com.mibarrio.api.model.Comercio;
 import com.mibarrio.api.model.Oferta;
 import com.mibarrio.api.repository.ComercioRepository;
 import com.mibarrio.api.repository.OfertaRepository;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class OfertaService {
@@ -19,37 +23,48 @@ public class OfertaService {
         this.comercioRepository = comercioRepository;
     }
 
-    public List<Oferta> getAll() {
-        return ofertaRepository.findByActivoTrue();
+    public List<OfertaResponse> getAll() {
+        return ofertaRepository.findByActivoTrue()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 
-    public Oferta getById(Long id) {
-        return ofertaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Oferta no encontrada"));
-    }
-
-    public List<Oferta> getByComercioId(Long comercioId) {
-        return ofertaRepository.findByComercioIdAndActivoTrue(comercioId);
-    }
-
-    public Oferta create(Long comercioId, Oferta oferta) {
-        Comercio comercio = comercioRepository.findById(comercioId)
-                .orElseThrow(() -> new RuntimeException("Comercio no encontrado"));
-
-        oferta.setComercio(comercio);
-        oferta.setActivo(true);
-
-        return ofertaRepository.save(oferta);
-    }
-
-    public Oferta update(Long id, Oferta updatedOferta) {
+    public OfertaResponse getById(Long id) {
         Oferta oferta = ofertaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Oferta no encontrada"));
 
-        oferta.setTitulo(updatedOferta.getTitulo());
-        oferta.setDescripcion(updatedOferta.getDescripcion());
+        return mapToResponse(oferta);
+    }
 
-        return ofertaRepository.save(oferta);
+    public List<OfertaResponse> getByComercioId(Long comercioId) {
+        return ofertaRepository.findByComercioIdAndActivoTrue(comercioId)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    public OfertaResponse create(Long comercioId, CreateOfertaRequest request) {
+        Comercio comercio = comercioRepository.findById(comercioId)
+                .orElseThrow(() -> new RuntimeException("Comercio no encontrado"));
+
+        Oferta oferta = new Oferta();
+        oferta.setTitulo(request.getTitulo());
+        oferta.setDescripcion(request.getDescripcion());
+        oferta.setActivo(true);
+        oferta.setComercio(comercio);
+
+        return mapToResponse(ofertaRepository.save(oferta));
+    }
+
+    public OfertaResponse update(Long id, UpdateOfertaRequest request) {
+        Oferta oferta = ofertaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Oferta no encontrada"));
+
+        oferta.setTitulo(request.getTitulo());
+        oferta.setDescripcion(request.getDescripcion());
+
+        return mapToResponse(ofertaRepository.save(oferta));
     }
 
     public void delete(Long id) {
@@ -58,5 +73,20 @@ public class OfertaService {
 
         oferta.setActivo(false);
         ofertaRepository.save(oferta);
+    }
+
+    private OfertaResponse mapToResponse(Oferta oferta) {
+        OfertaResponse response = new OfertaResponse();
+
+        response.setId(oferta.getId());
+        response.setTitulo(oferta.getTitulo());
+        response.setDescripcion(oferta.getDescripcion());
+
+        if (oferta.getComercio() != null) {
+            response.setComercioId(oferta.getComercio().getId());
+            response.setComercioNombre(oferta.getComercio().getNombre());
+        }
+
+        return response;
     }
 }
