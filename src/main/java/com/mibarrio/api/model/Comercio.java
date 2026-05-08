@@ -23,4 +23,8 @@ public class Comercio {
     private String telefono;
 
     private Boolean activo = true;
+
+    @ManyToOne
+    @JoinColumn(name = "categoria_id")
+    private Categoria categoria;
 }
