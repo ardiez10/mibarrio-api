@@ -13,4 +13,6 @@ public class ComercioResponse {
     private String nombre;
     private String direccion;
     private String telefono;
+    private Long categoriaId;
+    private String categoriaNombre;
 }

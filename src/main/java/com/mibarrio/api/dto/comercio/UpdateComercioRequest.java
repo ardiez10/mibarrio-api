@@ -1,6 +1,7 @@
 package com.mibarrio.api.dto.comercio;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,4 +22,7 @@ public class UpdateComercioRequest {
 
     @Size(max = 20, message = "El teléfono no puede superar los 20 caracteres")
     private String telefono;
+
+    @NotNull(message = "La categoría es obligatoria")
+    private Long categoriaId;
 }
