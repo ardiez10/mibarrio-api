@@ -87,6 +87,9 @@ public class OfertaService {
             response.setComercioNombre(oferta.getComercio().getNombre());
         }
 
+        response.setCreatedAt(oferta.getCreatedAt());
+        response.setUpdatedAt(oferta.getUpdatedAt());
+
         return response;
     }
 }

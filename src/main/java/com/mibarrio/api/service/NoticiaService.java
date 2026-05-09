@@ -75,6 +75,8 @@ public class NoticiaService {
         response.setFuente(noticia.getFuente());
         response.setUrl(noticia.getUrl());
         response.setFechaPublicacion(noticia.getFechaPublicacion());
+        response.setCreatedAt(noticia.getCreatedAt());
+        response.setUpdatedAt(noticia.getUpdatedAt());
 
         return response;
     }

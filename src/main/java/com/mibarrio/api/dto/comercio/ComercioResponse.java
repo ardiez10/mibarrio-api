@@ -1,5 +1,7 @@
 package com.mibarrio.api.dto.comercio;
 
+import java.time.LocalDateTime;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,4 +30,10 @@ public class ComercioResponse {
 
     @Schema(description = "Nombre de la categoría", example = "Alimentación")
     private String categoriaNombre;
+
+    @Schema(description = "Fecha de creación del comercio", example = "2026-05-09T11:30:00")
+    private LocalDateTime createdAt;
+
+    @Schema(description = "Fecha de última actualización del comercio", example = "2026-05-09T12:45:00")
+    private LocalDateTime updatedAt;
 }

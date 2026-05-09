@@ -86,11 +86,14 @@ public class ComercioService {
         response.setNombre(comercio.getNombre());
         response.setDireccion(comercio.getDireccion());
         response.setTelefono(comercio.getTelefono());
-        
+
         if (comercio.getCategoria() != null) {
             response.setCategoriaId(comercio.getCategoria().getId());
             response.setCategoriaNombre(comercio.getCategoria().getNombre());
         }
+
+        response.setCreatedAt(comercio.getCreatedAt());
+        response.setUpdatedAt(comercio.getUpdatedAt());
 
         return response;
     }

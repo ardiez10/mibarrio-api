@@ -1,5 +1,7 @@
 package com.mibarrio.api.dto.oferta;
 
+import java.time.LocalDateTime;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,33 +13,24 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class OfertaResponse {
 
-    @Schema(
-            description = "Identificador de la oferta",
-            example = "1"
-    )
+    @Schema(description = "Identificador de la oferta", example = "1")
     private Long id;
 
-    @Schema(
-            description = "Título de la oferta",
-            example = "2x1 en café"
-    )
+    @Schema(description = "Título de la oferta", example = "2x1 en café")
     private String titulo;
 
-    @Schema(
-            description = "Descripción de la oferta",
-            example = "Oferta disponible durante esta semana"
-    )
+    @Schema(description = "Descripción de la oferta", example = "Oferta disponible durante esta semana")
     private String descripcion;
 
-    @Schema(
-            description = "Identificador del comercio asociado",
-            example = "1"
-    )
+    @Schema(description = "Identificador del comercio asociado", example = "1")
     private Long comercioId;
 
-    @Schema(
-            description = "Nombre del comercio asociado",
-            example = "Cafetería Central"
-    )
+    @Schema(description = "Nombre del comercio asociado", example = "Cafetería Central")
     private String comercioNombre;
+
+    @Schema(description = "Fecha de creación de la oferta", example = "2026-05-09T11:30:00")
+    private LocalDateTime createdAt;
+
+    @Schema(description = "Fecha de última actualización de la oferta", example = "2026-05-09T12:45:00")
+    private LocalDateTime updatedAt;
 }
