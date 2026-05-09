@@ -1,5 +1,6 @@
 package com.mibarrio.api.dto.noticia;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -8,22 +9,45 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+@Schema(description = "Datos necesarios para crear una noticia")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateNoticiaRequest {
 
+    @Schema(
+            description = "Título de la noticia",
+            example = "Nueva feria local"
+    )
     @NotBlank(message = "El título es obligatorio")
     @Size(max = 150, message = "El título no puede superar los 150 caracteres")
     private String titulo;
 
+    @Schema(
+            description = "Descripción de la noticia",
+            example = "Este fin de semana habrá una feria de comercio local en el barrio."
+    )
     @NotBlank(message = "La descripción es obligatoria")
     @Size(max = 500, message = "La descripción no puede superar los 500 caracteres")
     private String descripcion;
 
+    @Schema(
+            description = "Fuente de la noticia",
+            example = "Asociación vecinal"
+    )
+    @Size(max = 100, message = "La fuente no puede superar los 100 caracteres")
     private String fuente;
 
+    @Schema(
+            description = "URL externa de la noticia",
+            example = "https://ejemplo.com/noticia"
+    )
+    @Size(max = 300, message = "La URL no puede superar los 300 caracteres")
     private String url;
 
+    @Schema(
+            description = "Fecha de publicación de la noticia",
+            example = "2026-05-08"
+    )
     private LocalDate fechaPublicacion;
 }
