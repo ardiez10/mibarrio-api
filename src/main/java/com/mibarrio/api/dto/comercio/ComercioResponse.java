@@ -36,4 +36,10 @@ public class ComercioResponse {
 
     @Schema(description = "Fecha de última actualización del comercio", example = "2026-05-09T12:45:00")
     private LocalDateTime updatedAt;
+
+    @Schema(description = "Identificador del usuario gestor del comercio", example = "1")
+    private Long usuarioId;
+
+    @Schema(description = "Nombre del usuario gestor del comercio", example = "Panadería Román")
+    private String usuarioNombre;
 }

@@ -9,18 +9,26 @@ import com.mibarrio.api.dto.comercio.CreateComercioRequest;
 import com.mibarrio.api.dto.comercio.UpdateComercioRequest;
 import com.mibarrio.api.model.Categoria;
 import com.mibarrio.api.model.Comercio;
+import com.mibarrio.api.model.Usuario;
 import com.mibarrio.api.repository.CategoriaRepository;
 import com.mibarrio.api.repository.ComercioRepository;
+import com.mibarrio.api.repository.UsuarioRepository;
 
 @Service
 public class ComercioService {
 
     private final ComercioRepository comercioRepository;
     private final CategoriaRepository categoriaRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    public ComercioService(ComercioRepository comercioRepository, CategoriaRepository categoriaRepository) {
+    public ComercioService(
+            ComercioRepository comercioRepository,
+            CategoriaRepository categoriaRepository,
+            UsuarioRepository usuarioRepository) {
+
         this.comercioRepository = comercioRepository;
         this.categoriaRepository = categoriaRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     public List<ComercioResponse> getAll() {
@@ -49,6 +57,11 @@ public class ComercioService {
                 .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
         comercio.setCategoria(categoria);
 
+        Usuario usuario = usuarioRepository.findByIdAndActivoTrue(request.getUsuarioId())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        comercio.setUsuario(usuario);
+
         Comercio savedComercio = comercioRepository.save(comercio);
 
         return mapToResponse(savedComercio);
@@ -65,6 +78,11 @@ public class ComercioService {
         Categoria categoria = categoriaRepository.findById(request.getCategoriaId())
                 .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
         comercio.setCategoria(categoria);
+
+        Usuario usuario = usuarioRepository.findByIdAndActivoTrue(request.getUsuarioId())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        comercio.setUsuario(usuario);
 
         Comercio updatedComercio = comercioRepository.save(comercio);
 
@@ -94,6 +112,11 @@ public class ComercioService {
 
         response.setCreatedAt(comercio.getCreatedAt());
         response.setUpdatedAt(comercio.getUpdatedAt());
+
+        if (comercio.getUsuario() != null) {
+            response.setUsuarioId(comercio.getUsuario().getId());
+            response.setUsuarioNombre(comercio.getUsuario().getNombre());
+        }
 
         return response;
     }
