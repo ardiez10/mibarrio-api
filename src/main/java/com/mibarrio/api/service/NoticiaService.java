@@ -26,7 +26,7 @@ public class NoticiaService {
     }
 
     public NoticiaResponse getById(Long id) {
-        Noticia noticia = noticiaRepository.findById(id)
+        Noticia noticia = noticiaRepository.findByIdAndActivoTrue(id)
                 .orElseThrow(() -> new RuntimeException("Noticia no encontrada"));
 
         return mapToResponse(noticia);

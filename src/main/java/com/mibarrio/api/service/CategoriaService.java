@@ -26,7 +26,7 @@ public class CategoriaService {
     }
 
     public CategoriaResponse getById(Long id) {
-        Categoria categoria = categoriaRepository.findById(id)
+        Categoria categoria = categoriaRepository.findByIdAndActivoTrue(id)
                 .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
 
         return mapToResponse(categoria);

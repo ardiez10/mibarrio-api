@@ -31,7 +31,7 @@ public class ComercioService {
     }
 
     public ComercioResponse getById(Long id) {
-        Comercio comercio = comercioRepository.findById(id)
+        Comercio comercio = comercioRepository.findByIdAndActivoTrue(id)
                 .orElseThrow(() -> new RuntimeException("Comercio no encontrado"));
 
         return mapToResponse(comercio);

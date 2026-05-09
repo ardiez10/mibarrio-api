@@ -1,11 +1,14 @@
 package com.mibarrio.api.repository;
 
-import com.mibarrio.api.model.Categoria;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import com.mibarrio.api.model.Categoria;
 
 public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
 
     List<Categoria> findByActivoTrue();
+    Optional<Categoria> findByIdAndActivoTrue(Long id);
 }
