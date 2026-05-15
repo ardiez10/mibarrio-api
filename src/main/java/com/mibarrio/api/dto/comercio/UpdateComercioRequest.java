@@ -3,6 +3,7 @@ package com.mibarrio.api.dto.comercio;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,7 +26,7 @@ public class UpdateComercioRequest {
     private String direccion;
 
     @Schema(description = "Teléfono de contacto", example = "666111222")
-    @Size(max = 20, message = "El teléfono no puede superar los 20 caracteres")
+    @Pattern(regexp = "^\\+?[0-9\\s]{9,15}$", message = "El teléfono debe contener entre 9 y 15 dígitos y solo puede incluir un + al inicio")
     private String telefono;
 
     @Schema(description = "Identificador de la categoría", example = "1")

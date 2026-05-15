@@ -54,6 +54,11 @@ public class HorarioService {
         horario.setActivo(true);
         horario.setComercio(comercio);
 
+        if (request.getHoraCierre().isBefore(request.getHoraApertura())
+                || request.getHoraCierre().equals(request.getHoraApertura())) {
+            throw new RuntimeException(
+                    "La hora de cierre debe ser posterior a la hora de apertura");
+        }
         return mapToResponse(horarioRepository.save(horario));
     }
 
@@ -65,6 +70,11 @@ public class HorarioService {
         horario.setHoraApertura(request.getHoraApertura());
         horario.setHoraCierre(request.getHoraCierre());
 
+        if (request.getHoraCierre().isBefore(request.getHoraApertura())
+                || request.getHoraCierre().equals(request.getHoraApertura())) {
+            throw new RuntimeException(
+                    "La hora de cierre debe ser posterior a la hora de apertura");
+        }
         return mapToResponse(horarioRepository.save(horario));
     }
 

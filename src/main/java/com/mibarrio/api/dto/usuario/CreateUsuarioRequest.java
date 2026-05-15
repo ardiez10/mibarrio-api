@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +19,7 @@ public class CreateUsuarioRequest {
     @Schema(description = "Nombre del usuario", example = "Alba Díez")
     @NotBlank(message = "El nombre es obligatorio")
     @Size(max = 100, message = "El nombre no puede superar los 100 caracteres")
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚáéíóúÑñ\\s]+$", message = "El nombre solo puede contener letras y espacios")
     private String nombre;
 
     @Schema(description = "Email del usuario", example = "alba@example.com")
@@ -27,7 +29,7 @@ public class CreateUsuarioRequest {
 
     @Schema(description = "Contraseña del usuario", example = "Password123")
     @NotBlank(message = "La contraseña es obligatoria")
-    @Size(min = 6, max = 10, message = "La contraseña debe tener entre 6 y 20 caracteres")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,100}$", message = "La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula y un número")
     private String password;
 
     @Schema(description = "Identificador del rol", example = "2")
