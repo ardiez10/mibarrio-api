@@ -27,7 +27,7 @@ public class CreateUsuarioRequest {
 
     @Schema(description = "Contraseña del usuario", example = "Password123")
     @NotBlank(message = "La contraseña es obligatoria")
-    @Size(min = 6, max = 100, message = "La contraseña debe tener entre 6 y 100 caracteres")
+    @Size(min = 6, max = 10, message = "La contraseña debe tener entre 6 y 20 caracteres")
     private String password;
 
     @Schema(description = "Identificador del rol", example = "2")

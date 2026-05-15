@@ -1,5 +1,10 @@
 package com.mibarrio.api.service;
 
+import java.util.List;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.mibarrio.api.dto.usuario.CreateUsuarioRequest;
 import com.mibarrio.api.dto.usuario.UpdateUsuarioRequest;
 import com.mibarrio.api.dto.usuario.UsuarioResponse;
@@ -7,22 +12,22 @@ import com.mibarrio.api.model.Rol;
 import com.mibarrio.api.model.Usuario;
 import com.mibarrio.api.repository.RolRepository;
 import com.mibarrio.api.repository.UsuarioRepository;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final RolRepository rolRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public UsuarioService(
             UsuarioRepository usuarioRepository,
-            RolRepository rolRepository) {
+            RolRepository rolRepository,
+            PasswordEncoder passwordEncoder) {
 
         this.usuarioRepository = usuarioRepository;
         this.rolRepository = rolRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<UsuarioResponse> getAll() {
@@ -53,7 +58,7 @@ public class UsuarioService {
 
         usuario.setNombre(request.getNombre());
         usuario.setEmail(request.getEmail());
-        usuario.setPassword(request.getPassword());
+        usuario.setPassword(passwordEncoder.encode(request.getPassword()));
         usuario.setActivo(true);
         usuario.setRol(rol);
 
