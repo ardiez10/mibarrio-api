@@ -17,9 +17,16 @@ public class HorarioService {
     private final HorarioRepository horarioRepository;
     private final ComercioRepository comercioRepository;
 
-    public HorarioService(HorarioRepository horarioRepository, ComercioRepository comercioRepository) {
+    private final AuthorizationService authorizationService;
+
+    public HorarioService(
+            HorarioRepository horarioRepository,
+            ComercioRepository comercioRepository,
+            AuthorizationService authorizationService) {
+
         this.horarioRepository = horarioRepository;
         this.comercioRepository = comercioRepository;
+        this.authorizationService = authorizationService;
     }
 
     public List<HorarioResponse> getAll() {
@@ -47,6 +54,10 @@ public class HorarioService {
         Comercio comercio = comercioRepository.findByIdAndActivoTrue(comercioId)
                 .orElseThrow(() -> new RuntimeException("Comercio no encontrado"));
 
+        if (!authorizationService.canManageComercio(comercio)) {
+            throw new RuntimeException("No tienes permisos para crear horarios en este comercio");
+        }
+
         Horario horario = new Horario();
         horario.setDiaSemana(request.getDiaSemana());
         horario.setHoraApertura(request.getHoraApertura());
@@ -66,6 +77,10 @@ public class HorarioService {
         Horario horario = horarioRepository.findByIdAndActivoTrue(id)
                 .orElseThrow(() -> new RuntimeException("Horario no encontrado"));
 
+        if (!authorizationService.canManageComercio(horario.getComercio())) {
+            throw new RuntimeException("No tienes permisos para modificar este horario");
+        }
+
         horario.setDiaSemana(request.getDiaSemana());
         horario.setHoraApertura(request.getHoraApertura());
         horario.setHoraCierre(request.getHoraCierre());
@@ -81,6 +96,10 @@ public class HorarioService {
     public void delete(Long id) {
         Horario horario = horarioRepository.findByIdAndActivoTrue(id)
                 .orElseThrow(() -> new RuntimeException("Horario no encontrado"));
+
+        if (!authorizationService.canManageComercio(horario.getComercio())) {
+            throw new RuntimeException("No tienes permisos para eliminar este horario");
+        }
 
         horario.setActivo(false);
         horarioRepository.save(horario);

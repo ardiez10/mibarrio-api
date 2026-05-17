@@ -21,14 +21,18 @@ public class ComercioService {
     private final CategoriaRepository categoriaRepository;
     private final UsuarioRepository usuarioRepository;
 
+    private final AuthorizationService authorizationService;
+
     public ComercioService(
             ComercioRepository comercioRepository,
             CategoriaRepository categoriaRepository,
-            UsuarioRepository usuarioRepository) {
+            UsuarioRepository usuarioRepository,
+            AuthorizationService authorizationService) {
 
         this.comercioRepository = comercioRepository;
         this.categoriaRepository = categoriaRepository;
         this.usuarioRepository = usuarioRepository;
+        this.authorizationService = authorizationService;
     }
 
     public List<ComercioResponse> getAll() {
@@ -71,6 +75,10 @@ public class ComercioService {
         Comercio comercio = comercioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Comercio no encontrado"));
 
+        if (!authorizationService.canManageComercio(comercio)) {
+            throw new RuntimeException("No tienes permisos para modificar este comercio");
+        }
+
         comercio.setNombre(request.getNombre());
         comercio.setDireccion(request.getDireccion());
         comercio.setTelefono(request.getTelefono());
@@ -92,6 +100,10 @@ public class ComercioService {
     public void delete(Long id) {
         Comercio comercio = comercioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Comercio no encontrado"));
+
+        if (!authorizationService.canManageComercio(comercio)) {
+            throw new RuntimeException("No tienes permisos para eliminar este comercio");
+        }
 
         comercio.setActivo(false);
         comercioRepository.save(comercio);

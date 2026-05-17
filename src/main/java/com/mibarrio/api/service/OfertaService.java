@@ -18,9 +18,16 @@ public class OfertaService {
     private final OfertaRepository ofertaRepository;
     private final ComercioRepository comercioRepository;
 
-    public OfertaService(OfertaRepository ofertaRepository, ComercioRepository comercioRepository) {
+    private final AuthorizationService authorizationService;
+
+    public OfertaService(
+            OfertaRepository ofertaRepository,
+            ComercioRepository comercioRepository,
+            AuthorizationService authorizationService) {
+
         this.ofertaRepository = ofertaRepository;
         this.comercioRepository = comercioRepository;
+        this.authorizationService = authorizationService;
     }
 
     public List<OfertaResponse> getAll() {
@@ -48,6 +55,10 @@ public class OfertaService {
         Comercio comercio = comercioRepository.findById(comercioId)
                 .orElseThrow(() -> new RuntimeException("Comercio no encontrado"));
 
+        if (!authorizationService.canManageComercio(comercio)) {
+            throw new RuntimeException("No tienes permisos para crear ofertas en este comercio");
+        }
+
         Oferta oferta = new Oferta();
         oferta.setTitulo(request.getTitulo());
         oferta.setDescripcion(request.getDescripcion());
@@ -61,6 +72,10 @@ public class OfertaService {
         Oferta oferta = ofertaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Oferta no encontrada"));
 
+        if (!authorizationService.canManageComercio(oferta.getComercio())) {
+            throw new RuntimeException("No tienes permisos para modificar esta oferta");
+        }
+
         oferta.setTitulo(request.getTitulo());
         oferta.setDescripcion(request.getDescripcion());
 
@@ -70,6 +85,10 @@ public class OfertaService {
     public void delete(Long id) {
         Oferta oferta = ofertaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Oferta no encontrada"));
+
+        if (!authorizationService.canManageComercio(oferta.getComercio())) {
+            throw new RuntimeException("No tienes permisos para eliminar esta oferta");
+        }
 
         oferta.setActivo(false);
         ofertaRepository.save(oferta);
