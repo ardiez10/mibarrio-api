@@ -29,6 +29,9 @@ public class Comercio {
 
     private Boolean activo = true;
 
+    @Enumerated(EnumType.STRING)
+    private EstadoComercio estado = EstadoComercio.ACTIVO;
+
     @ManyToOne
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
@@ -42,4 +45,7 @@ public class Comercio {
     @ManyToOne
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
+
+    @Column(name = "imagen_url")
+    private String imagenUrl;
 }

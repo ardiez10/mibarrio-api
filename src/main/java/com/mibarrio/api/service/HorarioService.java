@@ -3,6 +3,9 @@ package com.mibarrio.api.service;
 import com.mibarrio.api.dto.horario.CreateHorarioRequest;
 import com.mibarrio.api.dto.horario.HorarioResponse;
 import com.mibarrio.api.dto.horario.UpdateHorarioRequest;
+import com.mibarrio.api.exception.BadRequestException;
+import com.mibarrio.api.exception.ForbiddenException;
+import com.mibarrio.api.exception.NotFoundException;
 import com.mibarrio.api.model.Comercio;
 import com.mibarrio.api.model.Horario;
 import com.mibarrio.api.repository.ComercioRepository;
@@ -38,7 +41,7 @@ public class HorarioService {
 
     public HorarioResponse getById(Long id) {
         Horario horario = horarioRepository.findByIdAndActivoTrue(id)
-                .orElseThrow(() -> new RuntimeException("Horario no encontrado"));
+                .orElseThrow(() -> new NotFoundException("Horario no encontrado"));
 
         return mapToResponse(horario);
     }
@@ -52,10 +55,10 @@ public class HorarioService {
 
     public HorarioResponse create(Long comercioId, CreateHorarioRequest request) {
         Comercio comercio = comercioRepository.findByIdAndActivoTrue(comercioId)
-                .orElseThrow(() -> new RuntimeException("Comercio no encontrado"));
+                .orElseThrow(() -> new NotFoundException("Comercio no encontrado"));
 
         if (!authorizationService.canManageComercio(comercio)) {
-            throw new RuntimeException("No tienes permisos para crear horarios en este comercio");
+            throw new ForbiddenException("No tienes permisos para crear horarios en este comercio");
         }
 
         Horario horario = new Horario();
@@ -67,7 +70,7 @@ public class HorarioService {
 
         if (request.getHoraCierre().isBefore(request.getHoraApertura())
                 || request.getHoraCierre().equals(request.getHoraApertura())) {
-            throw new RuntimeException(
+            throw new BadRequestException(
                     "La hora de cierre debe ser posterior a la hora de apertura");
         }
         return mapToResponse(horarioRepository.save(horario));
@@ -75,10 +78,10 @@ public class HorarioService {
 
     public HorarioResponse update(Long id, UpdateHorarioRequest request) {
         Horario horario = horarioRepository.findByIdAndActivoTrue(id)
-                .orElseThrow(() -> new RuntimeException("Horario no encontrado"));
+                .orElseThrow(() -> new NotFoundException("Horario no encontrado"));
 
         if (!authorizationService.canManageComercio(horario.getComercio())) {
-            throw new RuntimeException("No tienes permisos para modificar este horario");
+            throw new ForbiddenException("No tienes permisos para modificar este horario");
         }
 
         horario.setDiaSemana(request.getDiaSemana());
@@ -87,7 +90,7 @@ public class HorarioService {
 
         if (request.getHoraCierre().isBefore(request.getHoraApertura())
                 || request.getHoraCierre().equals(request.getHoraApertura())) {
-            throw new RuntimeException(
+            throw new BadRequestException(
                     "La hora de cierre debe ser posterior a la hora de apertura");
         }
         return mapToResponse(horarioRepository.save(horario));
@@ -95,10 +98,10 @@ public class HorarioService {
 
     public void delete(Long id) {
         Horario horario = horarioRepository.findByIdAndActivoTrue(id)
-                .orElseThrow(() -> new RuntimeException("Horario no encontrado"));
+                .orElseThrow(() -> new NotFoundException("Horario no encontrado"));
 
         if (!authorizationService.canManageComercio(horario.getComercio())) {
-            throw new RuntimeException("No tienes permisos para eliminar este horario");
+            throw new ForbiddenException("No tienes permisos para eliminar este horario");
         }
 
         horario.setActivo(false);

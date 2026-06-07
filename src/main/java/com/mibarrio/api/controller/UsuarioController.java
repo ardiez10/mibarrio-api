@@ -36,6 +36,12 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.getAll());
     }
 
+    @Operation(summary = "Listar usuarios pendientes", description = "Devuelve los comercios pendientes de aprobacion.")
+    @GetMapping("/pendientes")
+    public ResponseEntity<List<UsuarioResponse>> getPendientes() {
+        return ResponseEntity.ok(usuarioService.getPendientes());
+    }
+
     @Operation(summary = "Obtener usuario por ID", description = "Devuelve el detalle de un usuario activo.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Usuario encontrado"),
@@ -90,5 +96,17 @@ public class UsuarioController {
             @PathVariable Long id) {
         usuarioService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Aprobar usuario", description = "Aprueba una cuenta pendiente.")
+    @PutMapping("/{id}/aprobar")
+    public ResponseEntity<UsuarioResponse> approve(@PathVariable Long id) {
+        return ResponseEntity.ok(usuarioService.approve(id));
+    }
+
+    @Operation(summary = "Rechazar usuario", description = "Rechaza una cuenta pendiente.")
+    @PutMapping("/{id}/rechazar")
+    public ResponseEntity<UsuarioResponse> reject(@PathVariable Long id) {
+        return ResponseEntity.ok(usuarioService.reject(id));
     }
 }

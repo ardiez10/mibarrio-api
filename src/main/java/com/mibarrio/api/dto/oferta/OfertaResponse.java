@@ -1,5 +1,6 @@
 package com.mibarrio.api.dto.oferta;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,11 +23,20 @@ public class OfertaResponse {
     @Schema(description = "Descripción de la oferta", example = "Oferta disponible durante esta semana")
     private String descripcion;
 
+    @Schema(description = "Indica si la oferta está activa", example = "true")
+    private Boolean activo;
+
     @Schema(description = "Identificador del comercio asociado", example = "1")
     private Long comercioId;
 
     @Schema(description = "Nombre del comercio asociado", example = "Cafetería Central")
     private String comercioNombre;
+
+    @Schema(description = "Categoría del comercio asociado", example = "Hostelería")
+    private String categoria;
+
+    @Schema(description = "Fecha hasta la que la oferta estará disponible", example = "2026-06-30")
+    private LocalDate fechaFin;
 
     @Schema(description = "Fecha de creación de la oferta", example = "2026-05-09T11:30:00")
     private LocalDateTime createdAt;

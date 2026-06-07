@@ -1,6 +1,8 @@
 package com.mibarrio.api.service;
 
 import com.mibarrio.api.dto.rol.CreateRolRequest;
+import com.mibarrio.api.exception.ConflictException;
+import com.mibarrio.api.exception.NotFoundException;
 import com.mibarrio.api.dto.rol.RolResponse;
 import com.mibarrio.api.model.Rol;
 import com.mibarrio.api.repository.RolRepository;
@@ -26,7 +28,7 @@ public class RolService {
 
     public RolResponse getById(Long id) {
         Rol rol = rolRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+                .orElseThrow(() -> new NotFoundException("Rol no encontrado"));
 
         return mapToResponse(rol);
     }
@@ -35,7 +37,7 @@ public class RolService {
 
         rolRepository.findByNombre(request.getNombre())
                 .ifPresent(r -> {
-                    throw new RuntimeException("Ya existe un rol con ese nombre");
+                    throw new ConflictException("Ya existe un rol con ese nombre");
                 });
 
         Rol rol = new Rol();

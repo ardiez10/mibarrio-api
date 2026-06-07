@@ -29,7 +29,7 @@ public class ComercioResponse {
     private Long categoriaId;
 
     @Schema(description = "Nombre de la categoría", example = "Alimentación")
-    private String categoriaNombre;
+    private String categoria;
 
     @Schema(description = "Fecha de creación del comercio", example = "2026-05-09T11:30:00")
     private LocalDateTime createdAt;
@@ -42,4 +42,13 @@ public class ComercioResponse {
 
     @Schema(description = "Nombre del usuario gestor del comercio", example = "Panadería Román")
     private String usuarioNombre;
+
+    @Schema(description = "Email del usuario gestor del comercio", example = "panaderia@example.com")
+    private String usuarioEmail;
+
+    private Boolean activo;
+
+    private String estado;
+
+    private String imagenUrl;
 }

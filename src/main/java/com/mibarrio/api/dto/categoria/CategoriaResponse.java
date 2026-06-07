@@ -22,4 +22,10 @@ public class CategoriaResponse {
             example = "Alimentación"
     )
     private String nombre;
+
+    @Schema(
+            description = "Indica si la categoría está activa",
+            example = "true"
+    )
+    private Boolean activo;
 }

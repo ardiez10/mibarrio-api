@@ -3,6 +3,7 @@ package com.mibarrio.api.service;
 import com.mibarrio.api.dto.categoria.CategoriaResponse;
 import com.mibarrio.api.dto.categoria.CreateCategoriaRequest;
 import com.mibarrio.api.dto.categoria.UpdateCategoriaRequest;
+import com.mibarrio.api.exception.NotFoundException;
 import com.mibarrio.api.model.Categoria;
 import com.mibarrio.api.repository.CategoriaRepository;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class CategoriaService {
 
     public CategoriaResponse getById(Long id) {
         Categoria categoria = categoriaRepository.findByIdAndActivoTrue(id)
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+                .orElseThrow(() -> new NotFoundException("Categoría no encontrada"));
 
         return mapToResponse(categoria);
     }
@@ -42,7 +43,7 @@ public class CategoriaService {
 
     public CategoriaResponse update(Long id, UpdateCategoriaRequest request) {
         Categoria categoria = categoriaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+                .orElseThrow(() -> new NotFoundException("Categoría no encontrada"));
 
         categoria.setNombre(request.getNombre());
 
@@ -51,7 +52,7 @@ public class CategoriaService {
 
     public void delete(Long id) {
         Categoria categoria = categoriaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+                .orElseThrow(() -> new NotFoundException("Categoría no encontrada"));
 
         categoria.setActivo(false);
         categoriaRepository.save(categoria);
@@ -61,6 +62,7 @@ public class CategoriaService {
         CategoriaResponse response = new CategoriaResponse();
         response.setId(categoria.getId());
         response.setNombre(categoria.getNombre());
+        response.setActivo(Boolean.TRUE.equals(categoria.getActivo()));
         return response;
     }
 }

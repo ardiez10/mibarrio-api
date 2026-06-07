@@ -1,5 +1,6 @@
 package com.mibarrio.api.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -32,6 +33,8 @@ public class Oferta {
     private String descripcion;
 
     private Boolean activo = true;
+
+    private LocalDate fechaFin;
 
     @ManyToOne
     @JoinColumn(name = "comercio_id")

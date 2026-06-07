@@ -32,6 +32,9 @@ public class NoticiaResponse {
     @Schema(description = "Fecha de publicación de la noticia", example = "2026-05-08")
     private LocalDate fechaPublicacion;
 
+    @Schema(description = "Indica si la noticia está activa", example = "true")
+    private Boolean activo;
+
     @Schema(description = "Fecha de creación de la noticia", example = "2026-05-09T11:30:00")
     private LocalDateTime createdAt;
 

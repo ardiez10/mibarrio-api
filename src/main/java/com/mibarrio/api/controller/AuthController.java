@@ -2,6 +2,8 @@ package com.mibarrio.api.controller;
 
 import com.mibarrio.api.dto.auth.LoginRequest;
 import com.mibarrio.api.dto.auth.LoginResponse;
+import com.mibarrio.api.dto.auth.SignupRequest;
+import com.mibarrio.api.dto.auth.SignupResponse;
 import com.mibarrio.api.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,5 +28,13 @@ public class AuthController {
             @Valid @RequestBody LoginRequest request) {
 
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    @Operation(summary = "Registro publico de comercio")
+    @PostMapping("/signup")
+    public ResponseEntity<SignupResponse> signup(
+            @Valid @RequestBody SignupRequest request) {
+
+        return ResponseEntity.ok(authService.signup(request));
     }
 }

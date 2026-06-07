@@ -29,6 +29,9 @@ public class Usuario {
 
     private Boolean activo = true;
 
+    @Enumerated(EnumType.STRING)
+    private EstadoUsuario estado = EstadoUsuario.ACTIVO;
+
     @ManyToOne
     @JoinColumn(name = "rol_id")
     private Rol rol;

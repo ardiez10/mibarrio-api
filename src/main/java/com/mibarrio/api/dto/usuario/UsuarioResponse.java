@@ -33,4 +33,7 @@ public class UsuarioResponse {
 
     @Schema(description = "Fecha de última actualización del usuario", example = "2026-05-09T12:45:00")
     private LocalDateTime updatedAt;
+
+    @Schema(description = "Estado de la cuenta", example = "ACTIVO")
+    private String estado;
 }

@@ -1,5 +1,7 @@
 package com.mibarrio.api.dto.oferta;
 
+import java.time.LocalDate;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -28,4 +30,10 @@ public class CreateOfertaRequest {
     @NotBlank(message = "La descripción es obligatoria")
     @Size(max = 300, message = "La descripción no puede superar los 300 caracteres")
     private String descripcion;
+
+    @Schema(
+            description = "Fecha hasta la que la oferta estará disponible",
+            example = "2026-06-30"
+    )
+    private LocalDate fechaFin;
 }

@@ -37,6 +37,12 @@ public class ComercioController {
         return ResponseEntity.ok(comercioService.getAll());
     }
 
+    @Operation(summary = "Listar comercios pendientes", description = "Devuelve las solicitudes de comercios pendientes de aprobación.")
+    @GetMapping("/pendientes")
+    public ResponseEntity<List<ComercioResponse>> getPendientes() {
+        return ResponseEntity.ok(comercioService.getPendientes());
+    }
+
     @Operation(summary = "Obtener comercio por ID", description = "Devuelve el detalle de un comercio activo.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Comercio encontrado"),
@@ -92,5 +98,17 @@ public class ComercioController {
             @PathVariable Long id) {
         comercioService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Aprobar comercio", description = "Aprueba una solicitud de comercio pendiente.")
+    @PutMapping("/{id}/aprobar")
+    public ResponseEntity<ComercioResponse> approve(@PathVariable Long id) {
+        return ResponseEntity.ok(comercioService.approve(id));
+    }
+
+    @Operation(summary = "Rechazar comercio", description = "Rechaza una solicitud de comercio pendiente.")
+    @PutMapping("/{id}/rechazar")
+    public ResponseEntity<ComercioResponse> reject(@PathVariable Long id) {
+        return ResponseEntity.ok(comercioService.reject(id));
     }
 }
