@@ -10,6 +10,7 @@ import com.mibarrio.api.model.EstadoComercio;
 
 public interface ComercioRepository extends JpaRepository<Comercio, Long> {
     List<Comercio> findByActivoTrue();
+    List<Comercio> findByUsuarioId(Long usuarioId);
     Optional<Comercio> findByIdAndActivoTrue(Long id);
     List<Comercio> findByEstado(EstadoComercio estado);
     List<Comercio> findByUsuarioIdAndEstado(Long usuarioId, EstadoComercio estado);

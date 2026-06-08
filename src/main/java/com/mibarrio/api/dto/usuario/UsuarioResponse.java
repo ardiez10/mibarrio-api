@@ -36,4 +36,7 @@ public class UsuarioResponse {
 
     @Schema(description = "Estado de la cuenta", example = "ACTIVO")
     private String estado;
+
+    @Schema(description = "Indica si el usuario está activo", example = "true")
+    private Boolean activo;
 }

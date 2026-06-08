@@ -37,6 +37,12 @@ public class NoticiaController {
         return ResponseEntity.ok(noticiaService.getAll());
     }
 
+    @Operation(summary = "Listar todas las noticias para administración", description = "Devuelve todas las noticias, activas e inactivas.")
+    @GetMapping("/admin")
+    public ResponseEntity<List<NoticiaResponse>> getAllForAdmin() {
+        return ResponseEntity.ok(noticiaService.getAllForAdmin());
+    }
+
     @Operation(summary = "Obtener noticia por ID", description = "Devuelve el detalle de una noticia activa.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Noticia encontrada"),
@@ -90,5 +96,11 @@ public class NoticiaController {
             @PathVariable Long id) {
         noticiaService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Activar noticia", description = "Vuelve a mostrar una noticia desactivada.")
+    @PutMapping("/{id}/activar")
+    public ResponseEntity<NoticiaResponse> activate(@PathVariable Long id) {
+        return ResponseEntity.ok(noticiaService.activate(id));
     }
 }

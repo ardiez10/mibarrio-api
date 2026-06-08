@@ -24,28 +24,31 @@ public class UsuarioService {
     private final RolRepository rolRepository;
     private final PasswordEncoder passwordEncoder;
     private final PlatformEmailService platformEmailService;
+    private final AuthorizationService authorizationService;
 
     public UsuarioService(
             UsuarioRepository usuarioRepository,
             RolRepository rolRepository,
             PasswordEncoder passwordEncoder,
-            PlatformEmailService platformEmailService) {
+            PlatformEmailService platformEmailService,
+            AuthorizationService authorizationService) {
 
         this.usuarioRepository = usuarioRepository;
         this.rolRepository = rolRepository;
         this.passwordEncoder = passwordEncoder;
         this.platformEmailService = platformEmailService;
+        this.authorizationService = authorizationService;
     }
 
     public List<UsuarioResponse> getAll() {
-        return usuarioRepository.findByActivoTrue()
+        return usuarioRepository.findAll()
                 .stream()
                 .map(this::mapToResponse)
                 .toList();
     }
 
     public UsuarioResponse getById(Long id) {
-        Usuario usuario = usuarioRepository.findByIdAndActivoTrue(id)
+        Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
 
         return mapToResponse(usuario);
@@ -82,7 +85,7 @@ public class UsuarioService {
 
     public UsuarioResponse update(Long id, UpdateUsuarioRequest request) {
 
-        Usuario usuario = usuarioRepository.findByIdAndActivoTrue(id)
+        Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
 
         Rol rol = rolRepository.findById(request.getRolId())
@@ -100,6 +103,8 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findByIdAndActivoTrue(id)
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
 
+        ensureNotCurrentUser(id);
+
         usuario.setActivo(false);
 
         platformEmailService.sendComercioEventEmail(
@@ -112,9 +117,10 @@ public class UsuarioService {
     }
 
     public UsuarioResponse approve(Long id) {
-        Usuario usuario = usuarioRepository.findByIdAndActivoTrue(id)
+        Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
 
+        usuario.setActivo(true);
         usuario.setEstado(EstadoUsuario.ACTIVO);
         Usuario savedUser = usuarioRepository.save(usuario);
 
@@ -126,6 +132,8 @@ public class UsuarioService {
     public UsuarioResponse reject(Long id) {
         Usuario usuario = usuarioRepository.findByIdAndActivoTrue(id)
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
+
+        ensureNotCurrentUser(id);
 
         usuario.setEstado(EstadoUsuario.RECHAZADO);
         usuario.setActivo(false);
@@ -143,6 +151,7 @@ public class UsuarioService {
         response.setId(usuario.getId());
         response.setNombre(usuario.getNombre());
         response.setEmail(usuario.getEmail());
+        response.setActivo(usuario.getActivo());
 
         if (usuario.getRol() != null) {
             response.setRolId(usuario.getRol().getId());
@@ -159,5 +168,13 @@ public class UsuarioService {
         response.setEstado(estado.name());
 
         return response;
+    }
+
+    private void ensureNotCurrentUser(Long userId) {
+        Usuario currentUser = authorizationService.getCurrentUser();
+
+        if (currentUser.getId().equals(userId)) {
+            throw new ConflictException("No puedes desactivar tu propio usuario");
+        }
     }
 }

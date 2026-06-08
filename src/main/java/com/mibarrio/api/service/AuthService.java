@@ -83,6 +83,7 @@ public class AuthService {
                 token,
                 "Bearer",
                 usuario.getEmail(),
+                usuario.getId(),
                 usuario.getRol().getNombre()
         );
     }

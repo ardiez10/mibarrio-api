@@ -13,4 +13,6 @@ public interface HorarioRepository extends JpaRepository<Horario, Long> {
     Optional<Horario> findByIdAndActivoTrue(Long id);
 
     List<Horario> findByComercioIdAndActivoTrue(Long comercioId);
+
+    Optional<Horario> findByComercioIdAndDiaSemanaAndActivoTrue(Long comercioId, Integer diaSemana);
 }

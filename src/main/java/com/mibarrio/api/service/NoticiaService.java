@@ -7,6 +7,7 @@ import com.mibarrio.api.dto.noticia.UpdateNoticiaRequest;
 import com.mibarrio.api.model.Noticia;
 import com.mibarrio.api.repository.NoticiaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -20,7 +21,14 @@ public class NoticiaService {
     }
 
     public List<NoticiaResponse> getAll() {
-        return noticiaRepository.findByActivoTrue()
+        return noticiaRepository.findByActivoTrueOrderByFechaPublicacionDescCreatedAtDesc()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    public List<NoticiaResponse> getAllForAdmin() {
+        return noticiaRepository.findAllByOrderByFechaPublicacionDescCreatedAtDesc()
                 .stream()
                 .map(this::mapToResponse)
                 .toList();
@@ -34,14 +42,14 @@ public class NoticiaService {
     }
 
     public NoticiaResponse create(CreateNoticiaRequest request) {
-        Noticia noticia = new Noticia();
+        Noticia noticia = findExistingByUrl(request.getUrl()).orElseGet(Noticia::new);
+        boolean nueva = noticia.getId() == null;
 
-        noticia.setTitulo(request.getTitulo());
-        noticia.setDescripcion(request.getDescripcion());
-        noticia.setFuente(request.getFuente());
-        noticia.setUrl(request.getUrl());
-        noticia.setFechaPublicacion(request.getFechaPublicacion());
-        noticia.setActivo(true);
+        applyRequest(noticia, request.getTitulo(), request.getDescripcion(), request.getFuente(),
+                request.getUrl(), request.getImagenUrl(), request.getFechaPublicacion());
+        if (nueva) {
+            noticia.setActivo(true);
+        }
 
         return mapToResponse(noticiaRepository.save(noticia));
     }
@@ -50,11 +58,8 @@ public class NoticiaService {
         Noticia noticia = noticiaRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Noticia no encontrada"));
 
-        noticia.setTitulo(request.getTitulo());
-        noticia.setDescripcion(request.getDescripcion());
-        noticia.setFuente(request.getFuente());
-        noticia.setUrl(request.getUrl());
-        noticia.setFechaPublicacion(request.getFechaPublicacion());
+        applyRequest(noticia, request.getTitulo(), request.getDescripcion(), request.getFuente(),
+                request.getUrl(), request.getImagenUrl(), request.getFechaPublicacion());
 
         return mapToResponse(noticiaRepository.save(noticia));
     }
@@ -67,6 +72,33 @@ public class NoticiaService {
         noticiaRepository.save(noticia);
     }
 
+    public NoticiaResponse activate(Long id) {
+        Noticia noticia = noticiaRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Noticia no encontrada"));
+
+        noticia.setActivo(true);
+
+        return mapToResponse(noticiaRepository.save(noticia));
+    }
+
+    private java.util.Optional<Noticia> findExistingByUrl(String url) {
+        if (!StringUtils.hasText(url)) {
+            return java.util.Optional.empty();
+        }
+
+        return noticiaRepository.findFirstByUrlOrderByIdDesc(url.trim());
+    }
+
+    private void applyRequest(Noticia noticia, String titulo, String descripcion, String fuente,
+            String url, String imagenUrl, java.time.LocalDate fechaPublicacion) {
+        noticia.setTitulo(titulo);
+        noticia.setDescripcion(descripcion);
+        noticia.setFuente(fuente);
+        noticia.setUrl(StringUtils.hasText(url) ? url.trim() : null);
+        noticia.setImagenUrl(StringUtils.hasText(imagenUrl) ? imagenUrl.trim() : null);
+        noticia.setFechaPublicacion(fechaPublicacion);
+    }
+
     private NoticiaResponse mapToResponse(Noticia noticia) {
         NoticiaResponse response = new NoticiaResponse();
 
@@ -75,6 +107,7 @@ public class NoticiaService {
         response.setDescripcion(noticia.getDescripcion());
         response.setFuente(noticia.getFuente());
         response.setUrl(noticia.getUrl());
+        response.setImagenUrl(noticia.getImagenUrl());
         response.setFechaPublicacion(noticia.getFechaPublicacion());
         response.setActivo(noticia.getActivo());
         response.setCreatedAt(noticia.getCreatedAt());

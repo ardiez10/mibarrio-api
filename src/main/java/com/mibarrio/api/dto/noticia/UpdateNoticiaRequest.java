@@ -18,12 +18,12 @@ public class UpdateNoticiaRequest {
 
     @Schema(description = "Título de la noticia", example = "Nueva feria local")
     @NotBlank(message = "El título es obligatorio")
-    @Size(max = 150, message = "El título no puede superar los 150 caracteres")
+    @Size(max = 500, message = "El título no puede superar los 500 caracteres")
     private String titulo;
 
     @Schema(description = "Descripción de la noticia", example = "Este fin de semana habrá una feria de comercio local en el barrio.")
     @NotBlank(message = "La descripción es obligatoria")
-    @Size(max = 500, message = "La descripción no puede superar los 500 caracteres")
+    @Size(max = 65535, message = "La descripción no puede superar los 65535 caracteres")
     private String descripcion;
 
     @Schema(description = "Fuente de la noticia", example = "Asociación vecinal")
@@ -31,9 +31,14 @@ public class UpdateNoticiaRequest {
     private String fuente;
 
     @Schema(description = "URL externa de la noticia", example = "https://ejemplo.com/noticia")
-    @Size(max = 300, message = "La URL no puede superar los 300 caracteres")
-    @Pattern(regexp = "^(http|https)://.*$", message = "La URL de la imagen debe ser válida")
+    @Size(max = 500, message = "La URL no puede superar los 500 caracteres")
+    @Pattern(regexp = "^$|^(http|https)://.*$", message = "La URL debe ser válida")
     private String url;
+
+    @Schema(description = "URL de la imagen de la noticia", example = "https://ejemplo.com/noticia.jpg")
+    @Size(max = 500, message = "La URL de la imagen no puede superar los 500 caracteres")
+    @Pattern(regexp = "^$|^(http|https)://.*$", message = "La URL de la imagen debe ser válida")
+    private String imagenUrl;
 
     @Schema(description = "Fecha de publicación de la noticia", example = "2026-05-08")
     private LocalDate fechaPublicacion;

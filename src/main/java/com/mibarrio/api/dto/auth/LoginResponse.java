@@ -20,6 +20,9 @@ public class LoginResponse {
     @Schema(description = "Email del usuario autenticado")
     private String email;
 
+    @Schema(description = "Identificador del usuario autenticado")
+    private Long userId;
+
     @Schema(description = "Rol del usuario")
     private String rol;
 }

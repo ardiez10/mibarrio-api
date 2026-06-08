@@ -29,6 +29,9 @@ public class NoticiaResponse {
     @Schema(description = "URL externa de la noticia", example = "https://ejemplo.com/noticia")
     private String url;
 
+    @Schema(description = "URL de la imagen de la noticia", example = "https://ejemplo.com/noticia.jpg")
+    private String imagenUrl;
+
     @Schema(description = "Fecha de publicación de la noticia", example = "2026-05-08")
     private LocalDate fechaPublicacion;
 

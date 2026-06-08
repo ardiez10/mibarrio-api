@@ -9,6 +9,8 @@ import com.mibarrio.api.model.Noticia;
 
 public interface NoticiaRepository extends JpaRepository<Noticia, Long> {
 
-    List<Noticia> findByActivoTrue();
+    List<Noticia> findByActivoTrueOrderByFechaPublicacionDescCreatedAtDesc();
+    List<Noticia> findAllByOrderByFechaPublicacionDescCreatedAtDesc();
     Optional<Noticia> findByIdAndActivoTrue(Long id);
+    Optional<Noticia> findFirstByUrlOrderByIdDesc(String url);
 }

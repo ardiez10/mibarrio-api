@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,13 +27,19 @@ public class Noticia {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 500)
     private String titulo;
 
+    @Column(columnDefinition = "TEXT")
     private String descripcion;
 
     private String fuente;
 
+    @Column(length = 500)
     private String url;
+
+    @Column(length = 500)
+    private String imagenUrl;
 
     private LocalDate fechaPublicacion;
 

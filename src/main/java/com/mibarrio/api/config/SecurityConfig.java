@@ -49,9 +49,13 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
+                        .requestMatchers(HttpMethod.GET, "/api/comercios/admin").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/comercios/mios").hasAnyRole("ADMIN", "COMERCIO")
                         .requestMatchers(HttpMethod.GET, "/api/comercios/pendientes").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/comercios/*/aprobar").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/comercios/*/rechazar").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/noticias/admin").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/noticias/*/activar").hasRole("ADMIN")
 
                         .requestMatchers(HttpMethod.GET, "/api/comercios/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/ofertas/**").permitAll()

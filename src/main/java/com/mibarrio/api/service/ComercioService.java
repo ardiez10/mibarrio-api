@@ -1,5 +1,7 @@
 package com.mibarrio.api.service;
 
+import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -7,15 +9,18 @@ import org.springframework.stereotype.Service;
 import com.mibarrio.api.dto.comercio.ComercioResponse;
 import com.mibarrio.api.dto.comercio.CreateComercioRequest;
 import com.mibarrio.api.dto.comercio.UpdateComercioRequest;
+import com.mibarrio.api.dto.horario.HorarioResponse;
 import com.mibarrio.api.exception.ForbiddenException;
 import com.mibarrio.api.exception.NotFoundException;
 import com.mibarrio.api.model.Categoria;
 import com.mibarrio.api.model.Comercio;
 import com.mibarrio.api.model.EstadoComercio;
 import com.mibarrio.api.model.EstadoUsuario;
+import com.mibarrio.api.model.Horario;
 import com.mibarrio.api.model.Usuario;
 import com.mibarrio.api.repository.CategoriaRepository;
 import com.mibarrio.api.repository.ComercioRepository;
+import com.mibarrio.api.repository.HorarioRepository;
 import com.mibarrio.api.repository.UsuarioRepository;
 import com.mibarrio.api.service.email.PlatformEmailService;
 
@@ -24,6 +29,7 @@ public class ComercioService {
 
     private final ComercioRepository comercioRepository;
     private final CategoriaRepository categoriaRepository;
+    private final HorarioRepository horarioRepository;
     private final UsuarioRepository usuarioRepository;
 
     private final AuthorizationService authorizationService;
@@ -32,12 +38,14 @@ public class ComercioService {
     public ComercioService(
             ComercioRepository comercioRepository,
             CategoriaRepository categoriaRepository,
+            HorarioRepository horarioRepository,
             UsuarioRepository usuarioRepository,
             AuthorizationService authorizationService,
             PlatformEmailService platformEmailService) {
 
         this.comercioRepository = comercioRepository;
         this.categoriaRepository = categoriaRepository;
+        this.horarioRepository = horarioRepository;
         this.usuarioRepository = usuarioRepository;
         this.authorizationService = authorizationService;
         this.platformEmailService = platformEmailService;
@@ -45,6 +53,22 @@ public class ComercioService {
 
     public List<ComercioResponse> getAll() {
         return comercioRepository.findByActivoTrue()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    public List<ComercioResponse> getAllForAdmin() {
+        return comercioRepository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    public List<ComercioResponse> getMine() {
+        Usuario currentUser = authorizationService.getCurrentUser();
+
+        return comercioRepository.findByUsuarioId(currentUser.getId())
                 .stream()
                 .map(this::mapToResponse)
                 .toList();
@@ -224,6 +248,13 @@ public class ComercioService {
         response.setActivo(estado == EstadoComercio.ACTIVO && Boolean.TRUE.equals(comercio.getActivo()));
         response.setEstado(estado.name());
         response.setImagenUrl(comercio.getImagenUrl());
+        response.setHorarios(horarioRepository.findByComercioIdAndActivoTrue(comercio.getId())
+                .stream()
+                .sorted(Comparator
+                        .comparing(Horario::getDiaSemana, Comparator.nullsLast(Integer::compareTo))
+                        .thenComparing(Horario::getHoraApertura, Comparator.nullsLast(LocalTime::compareTo)))
+                .map(this::mapHorarioToResponse)
+                .toList());
 
         if (comercio.getCategoria() != null) {
             response.setCategoriaId(comercio.getCategoria().getId());
@@ -237,6 +268,22 @@ public class ComercioService {
             response.setUsuarioId(comercio.getUsuario().getId());
             response.setUsuarioNombre(comercio.getUsuario().getNombre());
             response.setUsuarioEmail(comercio.getUsuario().getEmail());
+        }
+
+        return response;
+    }
+
+    private HorarioResponse mapHorarioToResponse(Horario horario) {
+        HorarioResponse response = new HorarioResponse();
+
+        response.setId(horario.getId());
+        response.setDiaSemana(horario.getDiaSemana());
+        response.setHoraApertura(horario.getHoraApertura());
+        response.setHoraCierre(horario.getHoraCierre());
+
+        if (horario.getComercio() != null) {
+            response.setComercioId(horario.getComercio().getId());
+            response.setComercioNombre(horario.getComercio().getNombre());
         }
 
         return response;

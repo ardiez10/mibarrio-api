@@ -37,6 +37,18 @@ public class ComercioController {
         return ResponseEntity.ok(comercioService.getAll());
     }
 
+    @Operation(summary = "Listar todos los comercios para administración", description = "Devuelve todos los comercios, activos e inactivos.")
+    @GetMapping("/admin")
+    public ResponseEntity<List<ComercioResponse>> getAllForAdmin() {
+        return ResponseEntity.ok(comercioService.getAllForAdmin());
+    }
+
+    @Operation(summary = "Listar comercios del usuario autenticado", description = "Devuelve los comercios gestionados por la cuenta actual.")
+    @GetMapping("/mios")
+    public ResponseEntity<List<ComercioResponse>> getMine() {
+        return ResponseEntity.ok(comercioService.getMine());
+    }
+
     @Operation(summary = "Listar comercios pendientes", description = "Devuelve las solicitudes de comercios pendientes de aprobación.")
     @GetMapping("/pendientes")
     public ResponseEntity<List<ComercioResponse>> getPendientes() {
