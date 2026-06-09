@@ -142,6 +142,7 @@ public class OfertaService {
         if (oferta.getComercio() != null) {
             response.setComercioId(oferta.getComercio().getId());
             response.setComercioNombre(oferta.getComercio().getNombre());
+            response.setComercioImagenUrl(oferta.getComercio().getImagenUrl());
 
             if (oferta.getComercio().getCategoria() != null) {
                 response.setCategoria(oferta.getComercio().getCategoria().getNombre());

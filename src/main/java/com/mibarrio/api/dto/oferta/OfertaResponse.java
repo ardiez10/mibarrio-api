@@ -32,6 +32,9 @@ public class OfertaResponse {
     @Schema(description = "Nombre del comercio asociado", example = "Cafetería Central")
     private String comercioNombre;
 
+    @Schema(description = "Imagen del comercio asociado", example = "https://example.com/comercio.jpg")
+    private String comercioImagenUrl;
+
     @Schema(description = "Categoría del comercio asociado", example = "Hostelería")
     private String categoria;
 
