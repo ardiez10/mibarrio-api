@@ -61,11 +61,6 @@ public class HorarioService {
             throw new ForbiddenException("No tienes permisos para crear horarios en este comercio");
         }
 
-        horarioRepository.findByComercioIdAndDiaSemanaAndActivoTrue(comercioId, request.getDiaSemana())
-                .ifPresent(existing -> {
-                    throw new BadRequestException("Ya existe un horario activo para ese día");
-                });
-
         Horario horario = new Horario();
         horario.setDiaSemana(request.getDiaSemana());
         horario.setHoraApertura(request.getHoraApertura());
@@ -88,14 +83,6 @@ public class HorarioService {
         if (!authorizationService.canManageComercio(horario.getComercio())) {
             throw new ForbiddenException("No tienes permisos para modificar este horario");
         }
-
-        horarioRepository.findByComercioIdAndDiaSemanaAndActivoTrue(
-                        horario.getComercio().getId(),
-                        request.getDiaSemana())
-                .filter(existing -> !existing.getId().equals(horario.getId()))
-                .ifPresent(existing -> {
-                    throw new BadRequestException("Ya existe un horario activo para ese día");
-                });
 
         horario.setDiaSemana(request.getDiaSemana());
         horario.setHoraApertura(request.getHoraApertura());
