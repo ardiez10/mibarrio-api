@@ -1,5 +1,8 @@
 USE mibarrio_db;
 
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+
 SET @password_admin123 = '$2a$10$Hrvy3CUebXCOskmyaQt59.0RwIwTAEMhdRo1D9uErvIyLjCctGnde';
 
 INSERT INTO roles (nombre)
